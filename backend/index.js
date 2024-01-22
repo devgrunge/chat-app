@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
+
 const port = 3001;
+
+const app = express();
 
 const server = http.createServer(app);
 
@@ -14,10 +16,15 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log(`User ${socket.id} has connected`);
+  console.log(`User connected : ${socket.id}`);
 
-  io.on("disconnect", () => {
-    consoe.log(`User ${socket.id} has disconnected`);
+  socket.on("join_room", (data) => {
+    socket.join(data);
+    console.log(`User with ID: ${socket.id} joined room: ${data}`);
+  });
+
+  socket.on("disconnect", () => {
+    consoe.log(`User disconnected: ${socket.id}`);
   });
 });
 
